@@ -5,25 +5,23 @@ const BACKEND_URL = "http://localhost:8080";
 export const login = async (email, password) => {
   try {
     const url = `${BACKEND_URL}/user/login?email=${email}&password=${password}`;
-    console.log("🌐 Requesting:", url); // Log the full URL
     const res = await axios.post(url);
-    const data = res.data;
-   // console.log("✅ Login success:", data);
-    return data;
+    return res.data;
   } catch (error) {
-    console.error("❌ Login error:", error.response?.data || error.message);
-    throw error;
+    if (error.response && error.response.status === 401) {
+      throw new Error("Invalid email or password. Please try again.");
+    } else {
+      throw new Error(error.response?.data?.message || "Login failed");
+    }
   }
 };
-
 
 export const signup = async (
   firstname,
   lastname,
   email,
-   phoneNumber,
-  password,
- 
+  phoneNumber,
+  password
 ) => {
   try {
     const res = await axios.post(`${BACKEND_URL}/user/signup`, {
@@ -32,13 +30,14 @@ export const signup = async (
       email,
       phoneNumber,
       password,
-      
     });
-    const data = res.data;
-    //console.log(data);
-    return data;
+    return res.data;
   } catch (error) {
-    throw error;
+    if (error.response && error.response.status === 409) {
+      throw new Error("This email is already registered. Please login.");
+    } else {
+      throw new Error(error.response?.data?.message || "Signup failed");
+    }
   }
 };
 export const getuserbyemail = async (email) => {

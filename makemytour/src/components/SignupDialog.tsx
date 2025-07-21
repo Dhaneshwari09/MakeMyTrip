@@ -13,7 +13,6 @@ import { Input } from "./ui/input";
 import { login, signup } from "../api";
 import { setUser } from "@/store";
 import { useDispatch } from "react-redux";
-import { error } from "console";
 
 const SignupDialog = () => {
   const [issignup, setissigunup] = useState(true);
@@ -23,10 +22,14 @@ const SignupDialog = () => {
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [open, setopen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(""); // Error message state
+
   const dispatch = useDispatch();
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg("");
+
     if (issignup) {
       try {
         const signin = await signup(
@@ -34,22 +37,24 @@ const SignupDialog = () => {
           lastname,
           email,
           phoneNumber,
-          password,
-          
+          password
         );
         dispatch(setUser(signin));
-      } catch (error) {
-        console.log(error);
+        setopen(false);
+        clearform();
+      } catch (error: any) {
+        const msg = error?.message || "Signup failed";
+        setErrorMsg(msg); // Show signup error
       }
     } else {
       try {
-        //console.log(email, password);
         const data = await login(email, password);
         dispatch(setUser(data));
         setopen(false);
         clearform();
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        const msg = error?.message || "Login failed";
+        setErrorMsg(msg); // Show login error
       }
     }
   };
@@ -60,7 +65,9 @@ const SignupDialog = () => {
     setEmail("");
     setPassword("");
     setPhoneNumber("");
+    setErrorMsg(""); // Clear error after successful auth
   };
+
   return (
     <Dialog open={open} onOpenChange={setopen}>
       <DialogTrigger asChild>
@@ -68,17 +75,25 @@ const SignupDialog = () => {
           Sign Up
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-black">
+      <DialogContent className="bg-black text-white">
         <DialogHeader>
           <DialogTitle>
             {issignup ? "Create Account" : "Welcome Back"}
           </DialogTitle>
           <DialogDescription>
             {issignup
-              ? "Join us to start booking your travles"
+              ? "Join us to start booking your travels"
               : "Enter your credentials to access your account"}
           </DialogDescription>
         </DialogHeader>
+
+        {/* Show error message */}
+        {errorMsg && (
+          <div className="text-red-500 text-sm mb-2 text-center font-medium">
+            {errorMsg}
+          </div>
+        )}
+
         <form onSubmit={handleAuth}>
           {issignup && (
             <div className="grid grid-cols-2 gap-4">
@@ -103,8 +118,9 @@ const SignupDialog = () => {
               </div>
             </div>
           )}
+
           <div className="space-y-2">
-            <Label htmlFor="email" className=" mt-3">
+            <Label htmlFor="email" className="mt-3">
               Email
             </Label>
             <Input
@@ -115,8 +131,9 @@ const SignupDialog = () => {
               required
             />
           </div>
+
           <div className="space-y-2">
-            <Label htmlFor="password" className=" mt-3">
+            <Label htmlFor="password" className="mt-3">
               Password
             </Label>
             <Input
@@ -127,13 +144,14 @@ const SignupDialog = () => {
               required
             />
           </div>
+
           {issignup && (
             <div className="space-y-2">
-              <Label htmlFor="phonNumber" className=" mt-3">
+              <Label htmlFor="phoneNumber" className="mt-3">
                 Phone Number
               </Label>
               <Input
-                id="phonNumber"
+                id="phoneNumber"
                 type="tel"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
@@ -141,21 +159,23 @@ const SignupDialog = () => {
               />
             </div>
           )}
+
           <Button
             type="submit"
-            className="w-full bg-blue-600 text-white mt-3"
+            className="w-full bg-blue-600 text-white mt-4"
             variant="outline"
           >
             {issignup ? "Sign Up" : "Login"}
           </Button>
         </form>
-        <div className="text-center text-sm ">
+
+        <div className="text-center text-sm">
           {issignup ? (
             <>
-              Already hav an account?
+              Already have an account?{" "}
               <Button
                 variant="link"
-                className="p-0 text-blue-600"
+                className="p-0 text-blue-500"
                 onClick={() => setissigunup(false)}
               >
                 Login
@@ -163,10 +183,10 @@ const SignupDialog = () => {
             </>
           ) : (
             <>
-              Don't have an account?
+              Don't have an account?{" "}
               <Button
                 variant="link"
-                className="p-0 text-blue-600"
+                className="p-0 text-blue-500"
                 onClick={() => setissigunup(true)}
               >
                 Sign Up
