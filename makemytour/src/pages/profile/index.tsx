@@ -27,19 +27,20 @@ const Index = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    bookings: [],
+    firstname: "",
+  lastname: "",
+  email: "",
+  phoneNumber: "",
+  bookings: [],
   });
 
   // Copy user data to local state on mount
   useEffect(() => {
+     console.log("User from Redux:", user);
     if (user) {
       setUserData({
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
+        firstname: user.firstname || "",
+  lastname: user.lastname || "",
         email: user.email || "",
         phoneNumber: user.phoneNumber || "",
         bookings: user.bookings || [],
@@ -51,8 +52,8 @@ const Index = () => {
     try {
       const data = await editprofile(
         user?.id,
-        userData.firstName,
-        userData.lastName,
+        userData.firstname,
+        userData.lastname,
         userData.email,
         userData.phoneNumber
       );
@@ -94,7 +95,7 @@ const Index = () => {
             </a>
             <ChevronRight className="w-4 h-4 text-gray-400" />
             <span  className="text-black">
-              {user?.email}
+              {user?.firstname}  {user?.lastname}
             </span>
           </div>
         </div>
@@ -119,15 +120,16 @@ const Index = () => {
 
               {isEditing ? (
                 <div className="space-y-4">
+                  
                   <div>
                     <label className="block text-black text-sm font-medium mb-1">
                       First Name
                     </label>
                     <input
                       type="text"
-                      value={userData.firstName}
+                      value={userData.firstname}
                       onChange={(e) =>
-                        handleEditFormChange("firstName", e.target.value)
+                        handleEditFormChange("firstname", e.target.value)
                       }
                       className="w-full px-3 py-2 border text-black rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
@@ -138,15 +140,15 @@ const Index = () => {
                     </label>
                     <input
                       type="text"
-                      value={userData.lastName}
+                      value={userData.lastname}
                       onChange={(e) =>
-                        handleEditFormChange("lastName", e.target.value)
+                        handleEditFormChange("lastname", e.target.value)
                       }
                       className="w-full px-3 py-2 border text-black rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-black text-sm font-medium mb-1">
+                    <label className="block text-black text-sm font-medium mb-">
                       Email
                     </label>
                     <input
@@ -155,9 +157,11 @@ const Index = () => {
                       onChange={(e) =>
                         handleEditFormChange("email", e.target.value)
                       }
+                      readOnly
                       className="w-full px-3 py-2 border text-black rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
+                
                   <div>
                     <label className="block text-black text-sm font-medium mb-1">
                       Phone Number
@@ -183,8 +187,8 @@ const Index = () => {
                       onClick={() => {
                         setIsEditing(false);
                         setUserData({
-                          firstName: user.firstName || "",
-                          lastName: user.lastName || "",
+                          firstname: user.firstname || "",
+                          lastname: user.lastname || "",
                           email: user.email || "",
                           phoneNumber: user.phoneNumber || "",
                           bookings: user.bookings || [],
@@ -203,7 +207,7 @@ const Index = () => {
                     <User className="w-5 h-5 text-gray-500" />
                     <div>
                       <p className="font-medium">
-                        {userData.firstName} {userData.lastName}
+                        {userData.firstname} {userData.lastname}
                       </p>
                     </div>
                   </div>

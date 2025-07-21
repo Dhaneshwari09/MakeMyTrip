@@ -52,15 +52,15 @@ export const getuserbyemail = async (email) => {
 
 export const editprofile = async (
   id,
-  firstName,
-  lastName,
+  firstname,
+  lastname,
   email,
   phoneNumber
 ) => {
   try {
     const res = await axios.post(`${BACKEND_URL}/user/edit?id=${id}`, {
-      firstName,
-      lastName,
+      firstname,
+      lastname,
       email,
       phoneNumber,
     });
