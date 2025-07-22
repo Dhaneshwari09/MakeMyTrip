@@ -17,6 +17,6 @@ public class BookingController {
     }
     @PostMapping("/hotel")
     public Users.Booking bookhotel (@RequestParam String userId,@RequestParam String hotelId,@RequestParam int rooms,@RequestParam double price){
-        return bookingService.bookhotel(userId,hotelId,rooms,price);
+        return bookingService.bookHotel(userId,hotelId,rooms,price);
     }
 }

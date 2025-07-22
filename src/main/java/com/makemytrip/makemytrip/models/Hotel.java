@@ -20,7 +20,6 @@ public class Hotel {
     public void setId(String id) {
         this._id = id;
     }
-
     public void setamenities(String amenities) {
         this.amenities = amenities;
     }

@@ -39,6 +39,7 @@ public class BookingService {
                 booking.setDate(LocalDate.now().toString());
                 booking.setQuantity(seats);
                 booking.setTotalPrice(price);
+                booking.setName(flight.getFlightName()); //  Store hotel name
                 user.getBookings().add(booking);
                 userRepository.save(user);
                 return booking;
@@ -48,7 +49,7 @@ public class BookingService {
         }
         throw new RuntimeException("User or flight not found");
     }
-    public Booking bookhotel(String userId,String hotelId,int rooms,double price){
+    public Booking bookHotel(String userId,String hotelId,int rooms, double price){
         Optional<Users> usersOptional =userRepository.findById(userId);
         Optional<Hotel> hotelOptional = hotelRepository.findById(hotelId);
         if(usersOptional.isPresent() && hotelOptional.isPresent()){
@@ -63,6 +64,7 @@ public class BookingService {
                 booking.setBookingId(hotelId);
                 booking.setDate(LocalDate.now().toString());
                 booking.setQuantity(rooms);
+                booking.setName(hotel.gethotelName()); //  store hotel name
                 booking.setTotalPrice(price);
                 user.getBookings().add(booking);
                 userRepository.save(user);

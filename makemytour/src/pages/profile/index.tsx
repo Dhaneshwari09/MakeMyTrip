@@ -28,19 +28,19 @@ const Index = () => {
 
   const [userData, setUserData] = useState({
     firstname: "",
-  lastname: "",
-  email: "",
-  phoneNumber: "",
-  bookings: [],
+    lastname: "",
+    email: "",
+    phoneNumber: "",
+    bookings: [],
   });
 
   // Copy user data to local state on mount
   useEffect(() => {
-     console.log("User from Redux:", user);
+    console.log("User from Redux:", user);
     if (user) {
       setUserData({
         firstname: user.firstname || "",
-  lastname: user.lastname || "",
+        lastname: user.lastname || "",
         email: user.email || "",
         phoneNumber: user.phoneNumber || "",
         bookings: user.bookings || [],
@@ -86,7 +86,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 ">
-         {/* Breadcrumb */}
+      {/* Breadcrumb */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center space-x-2 text-sm">
@@ -94,8 +94,8 @@ const Index = () => {
               Home
             </a>
             <ChevronRight className="w-4 h-4 text-gray-400" />
-            <span  className="text-black">
-              {user?.firstname}  {user?.lastname}
+            <span className="text-black">
+              {user?.firstname} {user?.lastname}
             </span>
           </div>
         </div>
@@ -120,7 +120,6 @@ const Index = () => {
 
               {isEditing ? (
                 <div className="space-y-4">
-                  
                   <div>
                     <label className="block text-black text-sm font-medium mb-1">
                       First Name
@@ -161,7 +160,7 @@ const Index = () => {
                       className="w-full px-3 py-2 border text-black rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
-                
+
                   <div>
                     <label className="block text-black text-sm font-medium mb-1">
                       Phone Number
@@ -234,7 +233,9 @@ const Index = () => {
           {/* Bookings Section */}
           <div className="md:col-span-2">
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-2xl text-black font-bold mb-6">My Bookings</h2>
+              <h2 className="text-2xl text-black font-bold mb-6">
+                My Bookings
+              </h2>
               <div className="space-y-6">
                 {userData.bookings.map((booking: any, index: number) => (
                   <div
@@ -253,19 +254,34 @@ const Index = () => {
                           </div>
                         )}
                         <div>
-                          <h3 className="font-semibold text-black">{booking?.type}</h3>
+                          <h3 className="font-semibold text-black">
+                            {booking?.type === "Flight" ? "Flight" : "Hotel"}
+                          </h3>
                           <p className="text-sm text-gray-500">
                             Booking ID: {booking?.bookingId}
                           </p>
+                          {booking?.type === "Hotel" && booking?.name && (
+                            <p className="text-sm text-gray-700">
+                              Hotel Name: {booking.name}{" "}
+                            </p>
+                            
+                          )}
+                            {booking?.type === "Flight" && booking?.name && (
+                            <p className="text-bold text-gray-700">
+                              Flight Name: {booking.name}{" "}
+                            </p>
+                            
+                          )}
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="font-semibold text-black">
                           ₹ {booking?.totalPrice.toLocaleString("en-IN")}
                         </p>
-                        <p className="text-sm text-gray-500">{booking?.type}</p>
+                        <p className="text-sm text-gray-500">Paid</p>
                       </div>
                     </div>
+
                     <div className="flex flex-wrap gap-4 text-sm text-gray-600">
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-4 h-4" />
@@ -285,7 +301,6 @@ const Index = () => {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

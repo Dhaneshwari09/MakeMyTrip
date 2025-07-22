@@ -84,6 +84,7 @@ public class Users {
         private String date;
         private int quantity;
         private double totalPrice;
+        private String name;
 
         // Getters and Setters
         public String getType() {
@@ -124,6 +125,14 @@ public class Users {
 
         public void setTotalPrice(double totalPrice) {
             this.totalPrice = totalPrice;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
 }
