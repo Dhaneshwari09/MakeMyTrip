@@ -1,4 +1,3 @@
-
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -84,8 +83,8 @@ const mockHotels = [
 ];
 interface User {
   _id: string;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   email: string;
   role: string;
   phoneNumber: string;
@@ -94,12 +93,27 @@ interface User {
 function UserSearch() {
   const [email, setEmail] = useState("");
   const [user, setUser] = useState<User | null>(null);
+  const [searched, setSearched] = useState(false);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data = await getuserbyemail(email);
-    const mockUser: User = data;
-    setUser(mockUser);
+    setSearched(false); // reset before new search
+
+    try {
+      const data = await getuserbyemail(email);
+
+      if (data) {
+        const mockUser: User = data;
+        setUser(mockUser);
+      } else {
+        setUser(null); // Not found
+      }
+    } catch (error) {
+      console.error("Error searching user:", error);
+      setUser(null); // In case of error
+    } finally {
+      setSearched(true);
+    }
   };
 
   return (
@@ -120,12 +134,18 @@ function UserSearch() {
         </div>
         <Button type="submit">Search</Button>
       </form>
+
+      {user === null && searched && (
+        <div className="text-red-500">This email is not registered.</div>
+      )}
+
       {user && (
         <div className="border p-4 rounded-md">
           <h3 className="font-bold mb-2">User Details</h3>
           <p>
-            <strong>Name:</strong> {user.firstName} {user.lastName}
+            <strong>Name:</strong> {user.firstname + " " + user.lastname}
           </p>
+
           <p>
             <strong>Email:</strong> {user.email}
           </p>
@@ -217,7 +237,7 @@ function AddEditHotel({ hotel }: { hotel: Hotel | null }) {
         {hotel ? "Edit Hotel" : "Add New Hotel"}
       </h3>
       <div>
-        <Label htmlFor="hotelName" >Hotel Name</Label>
+        <Label htmlFor="hotelName">Hotel Name</Label>
         <Input
           id="hotelName"
           name="hotelName"
@@ -320,7 +340,7 @@ function AddEditFlight({ flight }: { flight: Flight | null }) {
     e.preventDefault();
     // Here you would typically send this data to your backend
     console.log("Submitting flight data:", formData);
-     if (flight) {
+    if (flight) {
       await editflight(
         flight?.id,
         formData.flightName,
@@ -333,15 +353,15 @@ function AddEditFlight({ flight }: { flight: Flight | null }) {
       );
       return;
     }
-     await addflight(
+    await addflight(
       formData.flightName,
       formData.from,
       formData.to,
       formData.departureTime,
       formData.arrivalTime,
       formData.price,
-      formData.availableSeats,
-     )
+      formData.availableSeats
+    );
     if (!flight) {
       setFormData({
         flightName: "",
@@ -361,7 +381,12 @@ function AddEditFlight({ flight }: { flight: Flight | null }) {
         {flight ? "Edit Flight" : "Add New Flight"}
       </h3>
       <div>
-        <Label htmlFor="flightName" className="block text-sm font-medium text-gray-700">Flight Name</Label>
+        <Label
+          htmlFor="flightName"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Flight Name
+        </Label>
         <Input
           id="flightName"
           name="flightName"
@@ -448,7 +473,7 @@ export default function AdminDashboard() {
     <div className="container mx-auto p-4 bg-white max-w-full">
       <h1 className="text-3xl font-bold mb-6 text-black ">Admin Dashboard</h1>
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-         <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger
             className="text-gray-600 data-[state=active]:text-black data-[state=active]:bg-gray-300 transition-colors"
             value="flights"

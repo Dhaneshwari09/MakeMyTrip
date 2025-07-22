@@ -40,16 +40,22 @@ export const signup = async (
     }
   }
 };
+
+//----This is for User Management Search
 export const getuserbyemail = async (email) => {
   try {
     const res = await axios.get(`${BACKEND_URL}/user/email?email=${email}`);
     const data = res.data;
     return data;
   } catch (error) {
+     if (error.response && error.response.status === 404) {
+      return null; // User not found, return null
+    }
     throw error;
   }
 };
 
+//-------For Profile Page
 export const editprofile = async (
   id,
   firstname,
