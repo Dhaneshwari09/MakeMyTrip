@@ -264,6 +264,7 @@ function AddEditHotel({ hotel }: { hotel: Hotel | null }) {
           type="number"
           value={formData.pricePerNight}
           onChange={handleChange}
+           min="1"
           required
         />
       </div>
@@ -275,6 +276,7 @@ function AddEditHotel({ hotel }: { hotel: Hotel | null }) {
           type="number"
           value={formData.availableRooms}
           onChange={handleChange}
+           min="1"
           required
         />
       </div>
@@ -446,8 +448,11 @@ function AddEditFlight({ flight }: { flight: Flight | null }) {
           value={formData.price}
           onChange={handleChange}
           required
+          min="1"
+          placeholder="Enter price"
         />
       </div>
+
       <div>
         <Label htmlFor="availableSeats">Available Seats</Label>
         <Input
@@ -456,6 +461,7 @@ function AddEditFlight({ flight }: { flight: Flight | null }) {
           type="number"
           value={formData.availableSeats}
           onChange={handleChange}
+          min="1"
           required
         />
       </div>

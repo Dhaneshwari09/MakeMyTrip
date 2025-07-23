@@ -56,6 +56,15 @@ public class AdminController {
         }
         return ResponseEntity.notFound().build();
     }
+    @DeleteMapping("/flight/{id}")
+    public ResponseEntity<String> deleteFlight(@PathVariable String id) {
+        if (flightRepository.existsById(id)) {
+            flightRepository.deleteById(id);
+            return ResponseEntity.ok("Flight deleted successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
     @PutMapping("hotel/{id}")
     public ResponseEntity<Hotel> editHotel (@PathVariable String id, @RequestBody Hotel updatedHotel){
         Optional<Hotel> hotelOptional=hotelRepository.findById(id);
@@ -71,5 +80,15 @@ public class AdminController {
         }
         return ResponseEntity.notFound().build();
     }
+    @DeleteMapping("/hotel/{id}")
+    public ResponseEntity<String> deleteHotel(@PathVariable String id) {
+        if (hotelRepository.existsById(id)) {
+            hotelRepository.deleteById(id);
+            return ResponseEntity.ok("Hotel deleted successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

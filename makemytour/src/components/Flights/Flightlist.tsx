@@ -8,30 +8,44 @@ import {
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
-import { getflight } from "@/api";
+import { getflight, deleteflight } from "@/api"; // ✅ Import deleteflight
 import Loader from "../Loader";
+
 const FlightList = ({ onSelect }: any) => {
   const [flight, setflight] = useState<any[]>([]);
   const [loading, setloading] = useState(true);
+
+  const fetchflight = async () => {
+    try {
+      const data = await getflight();
+      setflight(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setloading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchflight = async () => {
-      try {
-        const data = await getflight();
-        console.log(data);
-        setflight(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setloading(false);
-      }
-    };
     fetchflight();
   }, []);
 
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this flight?");
+    if (!confirmDelete) return;
+
+    try {
+      await deleteflight(id);
+      fetchflight(); // Refresh list after deletion
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
+  };
+
   if (loading) {
     return <Loader />;
-   
   }
+
   return (
     <div>
       <h3 className="text-lg font-semibold mb-2">Flight List</h3>
@@ -41,24 +55,27 @@ const FlightList = ({ onSelect }: any) => {
             <TableHead className="text-black">Flight Name</TableHead>
             <TableHead className="text-black">From</TableHead>
             <TableHead className="text-black">To</TableHead>
-            <TableHead className="text-black">Action</TableHead>
+            <TableHead className="text-black">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {flight.length > 0 ? (
-            flight?.map((flight: any) => (
+            flight.map((flight: any) => (
               <TableRow key={flight._id}>
                 <TableCell>{flight.flightName}</TableCell>
                 <TableCell>{flight.from}</TableCell>
                 <TableCell>{flight.to}</TableCell>
-                <TableCell>
+                <TableCell className="flex gap-2">
                   <Button onClick={() => onSelect(flight)}>Edit</Button>
+                  <Button variant="destructive" onClick={() => handleDelete(flight.id)}>
+                    Delete
+                  </Button>
                 </TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell>No data</TableCell>
+              <TableCell colSpan={4}>No data</TableCell>
             </TableRow>
           )}
         </TableBody>
@@ -66,4 +83,5 @@ const FlightList = ({ onSelect }: any) => {
     </div>
   );
 };
-export default FlightList;
+
+export default FlightList;

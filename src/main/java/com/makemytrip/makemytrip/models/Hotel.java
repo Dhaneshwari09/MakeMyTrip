@@ -16,7 +16,6 @@ public class Hotel {
     public String getId() {
         return _id;
     }
-
     public void setId(String id) {
         this._id = id;
     }

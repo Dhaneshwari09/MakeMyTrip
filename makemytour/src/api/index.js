@@ -136,6 +136,15 @@ export const editflight = async (
     console.log(error);
   }
 };
+export const deleteflight = async (id) => {
+  try {
+    const res = await axios.delete(`${BACKEND_URL}/admin/flight/${id}`);
+    return res.data;
+  } catch (error) {
+    console.error("Delete failed:", error);
+    throw error;
+  }
+};
 
 export const gethotel = async () => {
   try {
@@ -192,9 +201,20 @@ export const edithotel = async (
   }
 };
 
+export const deleteHotel = async (id) => {
+  try {
+    const res = await axios.delete(`${BACKEND_URL}/admin/hotel/${id}`);
+    return res.data;
+  } catch (error) {
+    console.error("Delete failed:", error);
+    throw error;
+  }
+};
+
 export const handleflightbooking = async (userId, flightId, seats, price) => {
   try {
     const url = `${BACKEND_URL}/booking/flight?userId=${userId}&flightId=${flightId}&seats=${seats}&price=${price}`;
+   
     const res = await axios.post(url);
     const data = res.data;
     return data;

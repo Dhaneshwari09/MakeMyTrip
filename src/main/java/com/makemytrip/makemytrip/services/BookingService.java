@@ -35,7 +35,7 @@ public class BookingService {
 
                 Booking booking=new Booking();
                 booking.setType("Flight");
-                booking.setBookingId(flightId);
+                booking.setBookingId(flight.getId());
                 booking.setDate(LocalDate.now().toString());
                 booking.setQuantity(seats);
                 booking.setTotalPrice(price);
@@ -61,7 +61,7 @@ public class BookingService {
 
                 Booking booking=new Booking();
                 booking.setType("Hotel");
-                booking.setBookingId(hotelId);
+                booking.setBookingId(hotel.getId());
                 booking.setDate(LocalDate.now().toString());
                 booking.setQuantity(rooms);
                 booking.setName(hotel.gethotelName()); //  store hotel name
